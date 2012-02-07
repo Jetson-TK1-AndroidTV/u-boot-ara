@@ -60,7 +60,7 @@ DECLARE_GLOBAL_DATA_PTR;
 block_dev_desc_t *get_dev_hwpart(const char *ifname, int dev, int hwpart)
 {
 	const struct block_drvr *drvr = block_drvr;
-	block_dev_desc_t* (*reloc_get_dev)(int dev);
+	block_dev_desc_t* (*reloc_get_dev)(int dev), *dev_desc;
 	int (*select_hwpart)(int dev_num, int hwpart);
 	char *name;
 	int ret;
@@ -83,7 +83,9 @@ block_dev_desc_t *get_dev_hwpart(const char *ifname, int dev, int hwpart)
 			select_hwpart += gd->reloc_off;
 #endif
 		if (strncmp(ifname, name, strlen(name)) == 0) {
-			block_dev_desc_t *dev_desc = reloc_get_dev(dev);
+			dev_desc = reloc_get_dev(dev);
+			if (dev_desc && dev_desc->dev_init(dev_desc->dev))
+				dev_desc = NULL;
 			if (!dev_desc)
 				return NULL;
 			if (hwpart == 0 && !select_hwpart)
