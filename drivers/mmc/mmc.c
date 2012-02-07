@@ -1217,6 +1217,7 @@ static int mmc_send_if_cond(struct mmc *mmc)
 	return 0;
 }
 
+static int mmc_dev_init(int dev_num);
 /* not used any more */
 int __deprecated mmc_register(struct mmc *mmc)
 {
@@ -1254,6 +1255,7 @@ struct mmc *mmc_create(const struct mmc_config *cfg, void *priv)
 	mmc->block_dev.block_read = mmc_bread;
 	mmc->block_dev.block_write = mmc_bwrite;
 	mmc->block_dev.block_erase = mmc_berase;
+	mmc->block_dev.dev_init = mmc_dev_init;
 
 	/* setup initial part type */
 	mmc->block_dev.part_type = mmc->cfg->part_type;
@@ -1381,6 +1383,15 @@ int mmc_set_dsr(struct mmc *mmc, u16 val)
 {
 	mmc->dsr = val;
 	return 0;
+}
+
+static int mmc_dev_init(int dev_num)
+{
+	struct mmc *mmc = find_mmc_device(dev_num);
+	if (!mmc)
+		return -1;
+
+	return mmc_init(mmc);
 }
 
 /* CPU-specific MMC initializations */
