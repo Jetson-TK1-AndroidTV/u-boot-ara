@@ -114,7 +114,9 @@ static void i2c_reset(void)
 
 	i2c_clk_enable();
 
+#ifdef CONFIG_MV_I2C_SLAVE
 	writel(CONFIG_SYS_I2C_SLAVE, &base->isar); /* set our slave address */
+#endif
 	writel(I2C_ICR_INIT, &base->icr); /* set control reg values */
 	writel(I2C_ISR_INIT, &base->isr); /* set clear interrupt bits */
 	writel(readl(&base->icr) | ICR_IUE, &base->icr); /* enable unit */
