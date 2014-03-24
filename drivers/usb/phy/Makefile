@@ -7,3 +7,4 @@
 
 obj-$(CONFIG_TWL4030_USB) += twl4030.o
 obj-$(CONFIG_OMAP_USB_PHY) += omap_usb_phy.o
+obj-$(CONFIG_MRVL_USB_PHY) += mv_usb_phy.o
