@@ -30,7 +30,7 @@ static inline void mv_sdhci_writeb(struct sdhci_host *host, u8 val, int reg)
 #endif /* CONFIG_MMC_SDHCI_IO_ACCESSORS */
 
 static char *MVSDH_NAME = "mv_sdh";
-int mv_sdh_init(u32 regbase, u32 max_clk, u32 min_clk, u32 quirks)
+int mv_sdh_init(unsigned long regbase, u32 max_clk, u32 min_clk, u32 quirks)
 {
 	struct sdhci_host *host = NULL;
 	host = (struct sdhci_host *)malloc(sizeof(struct sdhci_host));

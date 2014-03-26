@@ -84,7 +84,7 @@ int i2c_set_bus_num(unsigned int bus)
 		return -1;
 	}
 
-	base = (struct mv_i2c *)i2c_regs[bus];
+	base = (struct mv_i2c *)(uintptr_t)i2c_regs[bus];
 	current_bus = bus;
 
 	if (!bus_initialized[current_bus]) {

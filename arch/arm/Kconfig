@@ -198,6 +198,9 @@ config ARCH_NOMADIK
 config ORION5X
 	bool "Marvell Orion"
 
+config TARGET_PXA1928DKB
+	bool "Marvell PXA1928DKB"
+
 config TARGET_DKB
 	bool "Support dkb"
 
@@ -569,6 +572,7 @@ source "board/CarMediaLab/flea3/Kconfig"
 source "board/Marvell/aspenite/Kconfig"
 source "board/Marvell/dkb/Kconfig"
 source "board/Marvell/gplugd/Kconfig"
+source "board/Marvell/pxa1928_concord/Kconfig"
 source "board/afeb9260/Kconfig"
 source "board/altera/socfpga/Kconfig"
 source "board/armadeus/apf27/Kconfig"
