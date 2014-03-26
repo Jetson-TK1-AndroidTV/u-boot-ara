@@ -14,7 +14,7 @@
 
 #include <common.h>
 
-#ifdef CONFIG_SHEEVA_88SV331xV5
+#if defined(CONFIG_SHEEVA_88SV331xV5) || defined(CONFIG_MARVELL_GPIO)
 /*
  * GPIO Register map for SHEEVA 88SV331xV5
  */
