@@ -30,7 +30,22 @@
 #endif /* CONFIG_SYS_TEXT_BASE */
 
 /* additions for new ARM relocation support */
+#ifndef CONFIG_SYS_SDRAM_BASE
 #define CONFIG_SYS_SDRAM_BASE	0x00000000
+#endif
+
+/* setting for trustzone hypervisor size */
+#ifndef CONFIG_TZ_HYPERVISOR_SIZE
+#define CONFIG_TZ_HYPERVISOR_SIZE	0x00000000
+#endif
+
+/*
+ * setting for kernel unzip buffer length
+ * set to 16M as default 8M not enough
+ */
+#ifndef CONFIG_SYS_BOOTM_LEN
+#define CONFIG_SYS_BOOTM_LEN 0x1000000
+#endif
 
 /*
  * CLKs configurations
@@ -92,7 +107,7 @@
 #define CONFIG_SYS_MEMTEST_START 0x00800000	/* 8M */
 #define CONFIG_SYS_MEMTEST_END	0x00ffffff	/*(_16M -1) */
 #define CONFIG_SYS_RESET_ADDRESS 0xffff0000	/* Rst Vector Adr */
-#define CONFIG_SYS_MAXARGS	16	/* max number of command args */
+#define CONFIG_SYS_MAXARGS	32	/* max number of command args */
 
 /* ====> Include platform Common Definitions */
 #include <asm/arch/config.h>

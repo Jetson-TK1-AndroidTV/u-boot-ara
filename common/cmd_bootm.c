@@ -38,6 +38,10 @@ extern flash_info_t flash_info[]; /* info for FLASH chips */
 static int do_imls(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 #endif
 
+#ifdef CONFIG_MRVL_BOOT
+#include <mv_boot.h>
+#endif
+
 bootm_headers_t images;		/* pointers to os/initrd/fdt images */
 
 /* we overload the cmd field with our state machine info instead of a
@@ -139,12 +143,22 @@ int bootm_maybe_autostart(cmd_tbl_t *cmdtp, const char *cmd)
 {
 	const char *ep = getenv("autostart");
 
+#ifdef CONFIG_MRVL_BOOT
+	image_load_notify(load_addr);
+	image_flash_notify(load_addr);
+#endif
 	if (ep && !strcmp(ep, "yes")) {
+#ifndef CONFIG_MRVL_BOOT
 		char *local_args[2];
 		local_args[0] = (char *)cmd;
 		local_args[1] = NULL;
+#endif
 		printf("Automatic boot of image at addr 0x%08lX ...\n", load_addr);
+#ifdef CONFIG_MRVL_BOOT
+		return run_command("boot", 0);
+#else
 		return do_bootm(cmdtp, 0, 1, local_args);
+#endif
 	}
 
 	return 0;
