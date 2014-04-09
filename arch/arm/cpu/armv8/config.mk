@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier:	GPL-2.0+
 #
-PLATFORM_RELFLAGS += -fno-common -ffixed-x18
+PLATFORM_RELFLAGS += -fno-pic -fno-common -ffixed-x18
 
 PF_CPPFLAGS_ARMV8 := $(call cc-option, -march=armv8-a)
 PF_NO_UNALIGNED := $(call cc-option, -mstrict-align)
