@@ -270,14 +270,6 @@ i2c_transfer_finish:
 /* ------------------------------------------------------------------------ */
 void i2c_init(int speed, int slaveaddr)
 {
-#ifdef CONFIG_I2C_MULTI_BUS
-	current_bus = 0;
-	base = (struct mv_i2c *)i2c_regs[current_bus];
-#else
-	base = (struct mv_i2c *)CONFIG_MV_I2C_REG;
-#endif
-
-	i2c_board_init(base);
 }
 
 /*
