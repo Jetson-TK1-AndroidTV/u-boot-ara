@@ -789,6 +789,11 @@ static void mmc_set_ios(struct mmc *mmc)
 		mmc->cfg->ops->set_ios(mmc);
 }
 
+static void mmc_set_74_clk(struct mmc *mmc)
+{
+	mmc->cfg->ops->set_74_clk(mmc);
+}
+
 void mmc_set_clock(struct mmc *mmc, uint clock)
 {
 	if (clock > mmc->cfg->f_max)
@@ -1301,6 +1306,7 @@ int mmc_start_init(struct mmc *mmc)
 
 	mmc_set_bus_width(mmc, 1);
 	mmc_set_clock(mmc, 1);
+	mmc_set_74_clk(mmc);
 
 	/* Reset the Card */
 	err = mmc_go_idle(mmc);

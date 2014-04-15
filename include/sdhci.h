@@ -195,6 +195,17 @@
 
 #define SDHCI_GET_VERSION(x) (x->version & SDHCI_SPEC_VER_MASK)
 
+#ifdef CONFIG_SDHCI_PXAV3
+#define SD_CFG_FIFO_PARAM	0x100
+#define SDCFG_GEN_PAD_CLK_ON	(1<<6)
+#define SDCFG_GEN_PAD_CLK_CNT_MASK	0xFF
+#define SDCFG_GEN_PAD_CLK_CNT_SHIFT	24
+
+#define SD_CE_ATA_2		0x10E
+#define SDCE_MISC_INT		(1<<2)
+#define SDCE_MISC_INT_EN	(1<<1)
+#endif
+
 /*
  * End of controller registers.
  */

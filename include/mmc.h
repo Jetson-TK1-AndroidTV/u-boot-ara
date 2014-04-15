@@ -265,6 +265,7 @@ struct mmc_ops {
 			struct mmc_cmd *cmd, struct mmc_data *data);
 	void (*set_ios)(struct mmc *mmc);
 	int (*init)(struct mmc *mmc);
+	void (*set_74_clk)(struct mmc *mmc);
 	int (*getcd)(struct mmc *mmc);
 	int (*getwp)(struct mmc *mmc);
 };

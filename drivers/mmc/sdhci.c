@@ -355,6 +355,35 @@ static void sdhci_set_power(struct sdhci_host *host, unsigned short power)
 	sdhci_writeb(host, pwr, SDHCI_POWER_CONTROL);
 }
 
+#ifdef CONFIG_SDHCI_PXAV3
+#define MAX_WAIT_COUNT 74
+void sdhci_set_74_clk(struct mmc *mmc)
+{
+	struct sdhci_host *host = (struct sdhci_host *)mmc->priv;
+	u16 tmp = 0;
+	int count = 0;
+
+	tmp = sdhci_readw(host, SD_CE_ATA_2);
+	tmp |= SDCE_MISC_INT | SDCE_MISC_INT_EN;
+	sdhci_writew(host, tmp, SD_CE_ATA_2);
+
+	tmp = sdhci_readl(host, SD_CFG_FIFO_PARAM);
+	tmp |= SDCFG_GEN_PAD_CLK_ON;
+	sdhci_writel(host, tmp, SD_CFG_FIFO_PARAM);
+
+	while (count++ < MAX_WAIT_COUNT + 1) {
+		if (sdhci_readw(host, SD_CE_ATA_2) & SDCE_MISC_INT)
+			break;
+		udelay(1000000/mmc->clock + 1);
+	}
+	if (count > MAX_WAIT_COUNT + 1)
+		printf("%s[%d]: 74 clk done(no wait) %d\n",
+		       host->name, mmc->block_dev.dev, --count);
+}
+#else
+void sdhci_set_74_clk(struct mmc *mmc) {}
+#endif
+
 void sdhci_set_ios(struct mmc *mmc)
 {
 	u32 ctrl;
@@ -435,6 +464,8 @@ static const struct mmc_ops sdhci_ops = {
 	.send_cmd	= sdhci_send_command,
 	.set_ios	= sdhci_set_ios,
 	.init		= sdhci_init,
+	.set_74_clk	= sdhci_set_74_clk,
+
 };
 
 int add_sdhci(struct sdhci_host *host, u32 max_clk, u32 min_clk)
