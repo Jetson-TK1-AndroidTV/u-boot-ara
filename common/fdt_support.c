@@ -388,19 +388,22 @@ static int fdt_pack_reg(const void *fdt, void *buf, uint64_t *address,
 	int i;
 	int address_len = get_cells_len(fdt, "#address-cells");
 	int size_len = get_cells_len(fdt, "#size-cells");
+	u64 cell;
 	char *p = buf;
 
 	for (i = 0; i < n; i++) {
 		if (address_len == 8)
-			*(fdt64_t *)p = cpu_to_fdt64(address[i]);
+			cell = cpu_to_fdt64(address[i]);
 		else
-			*(fdt32_t *)p = cpu_to_fdt32(address[i]);
+			cell = cpu_to_fdt32(address[i]);
+		memcpy(p, &cell, address_len);
 		p += address_len;
 
 		if (size_len == 8)
-			*(fdt64_t *)p = cpu_to_fdt64(size[i]);
+			cell = cpu_to_fdt64(size[i]);
 		else
-			*(fdt32_t *)p = cpu_to_fdt32(size[i]);
+			cell = cpu_to_fdt32(size[i]);
+		memcpy(p, &cell, size_len);
 		p += size_len;
 	}
 
