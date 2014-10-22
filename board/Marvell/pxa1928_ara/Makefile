@@ -4,4 +4,5 @@
 #
 # SPDX-License-Identifier:	GPL-2.0+
 #
-obj-y	:= pxa1928_concord.o
+
+obj-y := pxa1928_ara.o
