@@ -42,6 +42,7 @@ int mv_sdh_init(unsigned long regbase, u32 max_clk, u32 min_clk, u32 quirks)
 	host->name = MVSDH_NAME;
 	host->ioaddr = (void *)regbase;
 	host->quirks = quirks;
+	host->host_caps = MMC_MODE_HC;
 #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
 	memset(&mv_ops, 0, sizeof(struct sdhci_ops));
 	mv_ops.write_b = mv_sdhci_writeb;
