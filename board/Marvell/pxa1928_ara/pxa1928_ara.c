@@ -96,6 +96,8 @@ int board_early_init_f(void)
 		GPIO17_MFP17,
 		/* Volume Up key for recovery */
 		GPIO15_MFP15,
+		/* 2A Charge enable */
+		GPIO118_MFP118,
 		/*End of configureation*/
 		MFP_EOC
 	};
