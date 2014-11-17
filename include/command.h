@@ -89,12 +89,19 @@ int cmd_process_error(cmd_tbl_t *cmdtp, int err);
 extern int cmd_get_data_size(char* arg, int default_size);
 #endif
 
+#ifdef CONFIG_CMD_FASTBOOT
+extern int do_fastboot(cmd_tbl_t *cmdtp, int flag, int argc, char *const argv[]);
+#endif
+
 #ifdef CONFIG_CMD_BOOTD
 extern int do_bootd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 #endif
 #ifdef CONFIG_CMD_BOOTM
 extern int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 extern int bootm_maybe_autostart(cmd_tbl_t *cmdtp, const char *cmd);
+#ifdef CONFIG_CMD_BOOTAI
+extern int do_bootai(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
+#endif
 #else
 static inline int bootm_maybe_autostart(cmd_tbl_t *cmdtp, const char *cmd)
 {
