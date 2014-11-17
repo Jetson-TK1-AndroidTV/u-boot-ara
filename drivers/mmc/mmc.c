@@ -791,7 +791,8 @@ static void mmc_set_ios(struct mmc *mmc)
 
 static void mmc_set_74_clk(struct mmc *mmc)
 {
-	mmc->cfg->ops->set_74_clk(mmc);
+	if (mmc->cfg->ops->set_74_clk)
+		mmc->cfg->ops->set_74_clk(mmc);
 }
 
 void mmc_set_clock(struct mmc *mmc, uint clock)
