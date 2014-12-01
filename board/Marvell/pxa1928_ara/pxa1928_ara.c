@@ -19,6 +19,7 @@ e* (C) Copyright 2011
 #include <power/marvell88pm_pmic.h>
 #include <power/pxa1928_freq.h>
 #include <asm/gpio.h>
+#include <linux/usb/mv-phy.h>
 #ifdef CONFIG_OF_LIBFDT
 #include <libfdt.h>
 #endif
@@ -103,6 +104,12 @@ int board_early_init_f(void)
 	};
 	mfp_config(mfp_cfg);
 	return 0;
+}
+
+int g_dnl_board_usb_cable_connected(void)
+{
+	int chrg_type = mrvl_usb_phy_28nm_charger_detect(CONFIG_USB_PHY_BASE);
+	return !(chrg_type == DCP_CHARGER || chrg_type == NULL_CHARGER);
 }
 
 int board_init(void)
