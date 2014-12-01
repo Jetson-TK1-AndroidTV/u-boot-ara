@@ -148,6 +148,57 @@ static int mrvl_usb_phy_28nm_init(u32 base)
 	printf("usb phy inited 0x%x!\n", readl(&file->usb_ctrl0));
 	return 0;
 }
+
+int mrvl_usb_phy_28nm_charger_detect(u32 base)
+{
+	struct usb_file *file = (struct usb_file *)(uintptr_t)base;
+	int charger_type_bc12 = NULL_CHARGER;
+	u32 reg32;
+
+	if (!(readl(&file->usb_ctrl1) & VBUSDTC_OUT_MASK))
+		return charger_type_bc12;
+
+	/* Power up Charger Detector */
+	reg32 = PU_CHRG_DTC_MASK;
+	writel(reg32, &file->chrg_reg);
+
+	udelay(5);
+
+	/* Primary detection */
+	reg32 |= VSRC_CHARGE(1) | VDAT_CHARGE(1) | PD_EN_MASK;
+	writel(reg32, &file->chrg_reg);
+
+	/* Enable swtich DM/DP */
+	reg32 |= EN_SWITCH_DM_MASK | EN_SWITCH_DP_MASK;
+	writel(reg32, &file->chrg_reg);
+
+	mdelay(60);
+
+	if (readl(&file->usb_ctrl1) & CHRG_DTC_OUT_MASK) {
+		/* We have CHRG_DTC_OUT set.
+		 * Now proceed with Secondary Detection
+		 */
+		reg32 |= DP_DM_SWAP_MASK;
+		writel(reg32, &file->chrg_reg);
+
+		mdelay(80);
+
+		if (readl(&file->usb_ctrl1) & CHRG_DTC_OUT_MASK)
+			charger_type_bc12 = DCP_CHARGER;
+		else
+			charger_type_bc12 = CDP_CHARGER;
+	} else
+		charger_type_bc12 = DEFAULT_CHARGER;
+
+	/* Disable swtich DM/DP */
+	reg32 &= ~(EN_SWITCH_DM_MASK | EN_SWITCH_DP_MASK);
+	writel(reg32, &file->chrg_reg);
+
+	/* Power down Charger Detector */
+	writel(0, &file->chrg_reg);
+
+	return charger_type_bc12;
+}
 #endif
 
 
