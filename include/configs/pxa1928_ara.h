@@ -101,7 +101,7 @@
 		" crashkernel=4k@0x8140000 androidboot.lcd=1080_50 user_debug=31" \
 		" earlyprintk=uart8250-32bit,0xd4018000"
 
-#define CONFIG_BOOTCOMMAND	"mrvlboot"
+#define CONFIG_BOOTCOMMAND	"fastboot; mrvlboot"
 #define CONFIG_MMC_BOOT_DEV     "mmc dev 0 0"
 #define RAMDISK_LOADADDR        (CONFIG_TZ_HYPERVISOR_SIZE + 0x02000000)
 #define BOOTIMG_EMMC_ADDR       0x01000000
