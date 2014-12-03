@@ -216,14 +216,40 @@ struct usb_file {
 #define PU_OTG_MASK		(0x1 << 4)
 #define PU_OTG(x)		((x << 4) & PU_OTG_MASK)
 	u32 otg_reg;
+#define EN_SWITCH_DM_MASK	(0x1 << 13)
+#define EN_SWITCH_DP_MASK	(0x1 << 12)
+#define VSRC_CHARGE_MASK	(0x3 << 10)
+#define VSRC_CHARGE(x)		(x << 10)
+#define VDAT_CHARGE_MASK	(0x3 << 8)
+#define VDAT_CHARGE(x)		(x << 8)
+#define CDP_DM_AUTO_SWITCH_MASK (0x1 << 7)
+#define DP_DM_SWAP_MASK		(0x1 << 6)
+#define PU_CHRG_DTC_MASK	(0x1 << 5)
+#define PD_EN_MASK		(0x1 << 4)
+#define DCP_EN_MASK		(0x1 << 3)
+#define CDP_EN_MASK		(0x1 << 2)
+#define TESTMON_CHRGDTC_MASK 	(0x3 << 0)
 	u32 chrg_reg;
 	u32 pad[34];
 	u32 usb_ctrl0;
+#define CHRG_DTC_OUT_MASK	(0x1 << 4)
+#define VBUSDTC_OUT_MASK	(0x1 << 2)
 	u32 usb_ctrl1;
 	u32 pad1[2];
 	u32 usb_ctrl2;
 	u32 usb_ctrl3;
 };
+
+enum charger_type {
+	NULL_CHARGER = 0,
+	DEFAULT_CHARGER,
+	DCP_CHARGER,		/* standard wall charger */
+	CDP_CHARGER,		/* Charging Downstream Port */
+	SDP_CHARGER,		/* standard PC charger */
+	NONE_STANDARD_CHARGER,	/* none-standard charger */
+	MAX_CHARGER
+};
+
 
 int mrvl_usb_phy_init(void);
 #endif /* _USB_MV_PHY_H */
