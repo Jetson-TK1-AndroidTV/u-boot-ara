@@ -15,6 +15,7 @@ int do_fastboot(cmd_tbl_t *cmdtp, int flag, int argc, char *const argv[])
 {
 	int ret;
 
+	g_dnl_clear_detach();
 	ret = g_dnl_register("usb_dnl_fastboot");
 	if (ret)
 		return ret;
@@ -26,12 +27,15 @@ int do_fastboot(cmd_tbl_t *cmdtp, int flag, int argc, char *const argv[])
 	}
 
 	while (1) {
+		if (g_dnl_detach())
+			break;
 		if (ctrlc())
 			break;
 		usb_gadget_handle_interrupts();
 	}
 
 	g_dnl_unregister();
+	g_dnl_clear_detach();
 	return CMD_RET_SUCCESS;
 }
 
