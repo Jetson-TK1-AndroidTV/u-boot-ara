@@ -402,6 +402,8 @@ int misc_init_r(void)
 #endif
 	*(u32 *)(CONFIG_CORE_BUSY_ADDR) = 0x0;
 
+	srand(get_ticks());
+
 	return 0;
 }
 
