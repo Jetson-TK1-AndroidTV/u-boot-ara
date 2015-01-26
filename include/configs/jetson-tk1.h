@@ -113,6 +113,14 @@
 #define CONFIG_FASTBOOT_FLASH
 #define CONFIG_FASTBOOT_FLASH_MMC_DEV	0
 #define BOARD_EXTRA_ENV_SETTINGS \
+	"fastboot_partition_alias_boot=LNX\0" \
+	"fastboot_partition_alias_recovery=SOS\0" \
+	"fastboot_partition_alias_system=APP\0" \
+	"fastboot_partition_alias_cache=CAC\0" \
+	"fastboot_partition_alias_misc=MSC\0" \
+	"fastboot_partition_alias_factory=FCT\0" \
+	"fastboot_partition_alias_userdata=UDA\0" \
+	"fastboot_partition_alias_vendor=VNR\0" \
 	"bootargs_append=" \
 	"init=init console=ttyS0,115200n8 " \
 	"lp0_vec=2064@0xf46ff000 mem=1862M@2048M vpr=151M@3945M tsec=32M@3913M " \
