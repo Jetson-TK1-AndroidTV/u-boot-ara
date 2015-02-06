@@ -56,6 +56,10 @@
 #define CONFIG_TZ_HYPERVISOR_SIZE       0
 #endif
 
+#define CONFIG_PARTITION_UUIDS
+#define CONFIG_RANDOM_UUID
+#define CONFIG_CMD_UUID
+
 /*
  * Commands configuration
  */
@@ -68,6 +72,7 @@
 #define CONFIG_CMD_MMC
 #define CONFIG_FS_EXT4
 #define CONFIG_CMD_FS_GENERIC
+#define CONFIG_CMD_GPT
 #undef CONFIG_CMD_NET
 #undef CONFIG_CMD_NFS
 
@@ -147,6 +152,22 @@
 #define CONFIG_ENV_OFFSET               (CONFIG_UBOOT_PA_END - CONFIG_ENV_SIZE)
 #define CONFIG_SYS_HUSH_PARSER
 #define CONFIG_SYS_PROMPT_HUSH_PS2      "> "
+
+#undef CONFIG_EXTRA_ENV_SETTINGS
+#define CONFIG_EXTRA_ENV_SETTINGS \
+        "autostart=yes\0" \
+        "verify=yes\0" \
+        "cdc_connect_timeout=60\0" \
+	"partitions=" \
+	"name=DTIM,start=0x00200000,size=0x200000;" \
+	"name=recovery,start=0x00400000,size=0xb00000;" \
+	"name=bootloader,start=0x00F00000,size=0x100000;" \
+	"name=boot,start=0x01000000,size=0x1000000;" \
+	"name=dtb,start=0x02000000,size=0x1000000;" \
+	"name=system,start=0x03000000,size=0x30000000;" \
+	"name=vendor,start=0x33000000,size=0x10000000;" \
+	"name=cache,start=0x43000000,size=0x20000000;" \
+	"name=userdata,start=0x63000000,size=0x15d000000\0"
 
 #define CONFIG_REVISION_TAG	1
 /* Marvell PXAV3 MMC Controller Configuration */
