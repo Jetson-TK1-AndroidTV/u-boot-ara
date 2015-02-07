@@ -862,7 +862,6 @@ int board_mmc_init(bd_t *bd)
 		}
 	}
 
-	p_recovery_reg_funcs = &pxa1928_recovery_reg_funcs;
 	return 0;
 }
 #endif
