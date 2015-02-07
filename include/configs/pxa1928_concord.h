@@ -110,33 +110,24 @@
  */
 #define CONFIG_ZERO_BOOTDELAY_CHECK
 #define CONFIG_SHOW_BOOT_PROGRESS
-#define CONFIG_MRVL_BOOT    1
 #define CONFIG_MISC_INIT_R	1
 
-#define CONFIG_BOOTARGS                 \
-		"initrd=0x03000000,10m rw androidboot.console=ttyS0" \
-		" console=ttyS0,115200 panic_debug uart_dma" \
-		" crashkernel=4k@0x8140000 androidboot.lcd=1080_50 user_debug=31" \
-		" earlyprintk=uart8250-32bit,0xd4018000"
+#define CONFIG_BOOTARGS \
+	"rw console=ttyS0,115200 panic_debug uart_dma"
 
-#define CONFIG_BOOTCOMMAND	"mrvlboot"
+#define CONFIG_BOOTCOMMAND \
+	"while true; do " \
+	"mmc read ${fdt_addr_r} 0x10000 0x1000; " \
+	"fastboot; " \
+	"mmc read ${fdt_addr_r} 0x10000 0x1000; " \
+	"mmc read ${kernel_addr_r} 0x8000 0x8000 && " \
+	"bootm ${kernel_addr_r} ${kernel_addr_r} ${fdt_addr_r};" \
+	"done"
+
 #define CONFIG_MMC_BOOT_DEV     "mmc dev 0 0"
-#define RAMDISK_LOADADDR        (CONFIG_TZ_HYPERVISOR_SIZE + 0x02000000)
-#define BOOTIMG_EMMC_ADDR       0x01000000
-#define RECOVERYIMG_EMMC_ADDR   0x00500000
-/* Kernel size is set to 4MB for legacy non-boot.img format */
-#define KERNEL_SIZE             0x00400000
-#define RAMDISK_SIZE            0x00400000
-#define RECOVERY_KERNEL_LOADADDR        (CONFIG_TZ_HYPERVISOR_SIZE + 0x01080000)
-#define RECOVERY_RAMDISK_LOADADDR       (CONFIG_TZ_HYPERVISOR_SIZE + 0x02A00000)
-#define MRVL_BOOT               1
 #define CONFIG_OF_LIBFDT        1
-#ifdef CONFIG_OF_LIBFDT
-#define DTB_LOADADDR            (CONFIG_TZ_HYPERVISOR_SIZE + 0x000e0000)
-#define DTB_EMMC_ADDR           (BOOTIMG_EMMC_ADDR + 0xF00000)
-#define RECOVERY_DTB_EMMC_ADDR  (RECOVERYIMG_EMMC_ADDR + 0x900000)
-#define DTB_SIZE                0x00040000
-#endif
+#define CONFIG_OF_BOARD_SETUP
+
 /*
  * Environment variables configurations
  */
@@ -158,6 +149,8 @@
         "autostart=yes\0" \
         "verify=yes\0" \
         "cdc_connect_timeout=60\0" \
+	"fdt_addr_r=0x03000000\0" \
+	"kernel_addr_r=0x0127f800\0" \
 	"partitions=" \
 	"name=DTIM,start=0x00200000,size=0x200000;" \
 	"name=recovery,start=0x00400000,size=0xb00000;" \

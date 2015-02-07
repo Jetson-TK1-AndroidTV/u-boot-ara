@@ -374,15 +374,8 @@ int recovery_key_detect(void)
 }
 #endif
 
-#ifdef CONFIG_OF_LIBFDT
-unsigned int dtb_offset(void)
-{
-	unsigned int offset = pxa1928_discrete ? 1 : 0;
-
-	return offset * DTB_SIZE;
-}
-
-void handle_dtb(struct fdt_header *devtree)
+#if defined(CONFIG_OF_BOARD_SETUP)
+void ft_board_setup(void *devtree, bd_t *bd)
 {
 	char cmd[128];
 
