@@ -483,7 +483,8 @@ static void do_bootm_on_complete(struct usb_ep *ep, struct usb_request *req)
 #ifdef CONFIG_CMD_BOOTAI
 	char *bootm_args[] = { "bootai", "ram", boot_addr_start, NULL };
 #else
-	char *bootm_args[] = { "bootm", boot_addr_start, NULL };
+	char *bootm_args[] = { "bootm", boot_addr_start, boot_addr_start,
+		"${fdt_addr_r}", NULL };
 #endif
 
 	puts("Booting kernel..\n");
