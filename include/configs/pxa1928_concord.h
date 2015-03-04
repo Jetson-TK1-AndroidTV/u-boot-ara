@@ -30,6 +30,7 @@
 #define CONFIG_ARMV8
 #define CONFIG_SYS_CACHELINE_SIZE	64
 #define CONFIG_SYS_DCACHE_OFF
+#define CONFIG_SYS_GENERIC_BOARD
 
 /* Generic Timer Definitions for arm timer */
 #define COUNTER_FREQUENCY              (0x340000)     /* 3.25MHz */
