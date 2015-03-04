@@ -118,8 +118,6 @@
 #define CONFIG_BOOTCOMMAND \
 	"while true; do " \
 	"mmc read ${fdt_addr_r} 0x10000 0x1000; " \
-	"fastboot; " \
-	"mmc read ${fdt_addr_r} 0x10000 0x1000; " \
 	"mmc read ${kernel_addr_r} 0x8000 0x8000 && " \
 	"bootm ${kernel_addr_r} ${kernel_addr_r} ${fdt_addr_r};" \
 	"done"
