@@ -383,33 +383,6 @@ void ft_board_setup(void *devtree, bd_t *bd)
 	sprintf(cmd, "fdt addr 0x%p", devtree);
 	run_command(cmd, 0);
 
-#ifdef CONFIG_PXA168_FB
-	if (bl_chip_id == BL_KDT3102) {
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/lm3532@38", 0);
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/pm828x@10", 0);
-		run_command("fdt rm /pwm-bl", 0);
-	} else {
-		run_command("fdt rm /r63311 bl_gpio", 0);
-		if (bl_chip_id == PM828X_ID)
-			run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/lm3532@38", 0);
-		else
-			run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/pm828x@10", 0);
-	}
-
-	if (g_panel_id == SHARP_1080P_ID) {
-		run_command("fdt rm /lg4591", 0);
-		run_command("fdt rm /otm1281", 0);
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/gt913@5d", 0);
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/s3202@20", 0);
-		run_command("fdt set /soc/axi/disp/path1/pn_sclk_clksrc clksrc pll3", 0);
-	} else {
-		run_command("fdt rm /lg4591", 0);
-		run_command("fdt rm /r63311", 0);
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/gt913@5d", 0);
-		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/s3202@22", 0);
-	}
-#endif /* end of CONFIG_PXA168_FB */
-
 	if (3 == board_rev || 4 == board_rev) {
 		run_command("fdt set /soc/apb@d4000000/i2c@d4031000/mpu9250@69 negate_x <1>", 0);
 		run_command("fdt set /soc/apb@d4000000/i2c@d4031000/mpu9250@69 negate_y <1>", 0);
