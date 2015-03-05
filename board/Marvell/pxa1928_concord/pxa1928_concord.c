@@ -52,6 +52,7 @@ u32 get_board_rev(void)
 }
 #endif
 
+unsigned int iddq_1p05 = 0, iddq_1p30 = 0;
 unsigned int mv_profile = 0xFF;
 /* Define CPU/DDR default max frequency
    CPU: 1300MHz
@@ -386,8 +387,7 @@ void ft_board_setup(void *devtree, bd_t *bd)
 	if (3 == board_rev || 4 == board_rev) {
 		run_command("fdt set /soc/apb@d4000000/i2c@d4031000/mpu9250@69 negate_x <1>", 0);
 		run_command("fdt set /soc/apb@d4000000/i2c@d4031000/mpu9250@69 negate_y <1>", 0);
-		run_command("fdt set /soc/apb@d4000000/i2c@d4011000/88pm860@30/headset marvell,headset-flag <0>", 0);
-		run_command("fdt set /soc/apb@d4000000/i2c@d4011000/88pm860@30/headset marvell,ground-detect <1>", 0);
+		run_command("fdt rm /soc/apb@d4000000/i2c@d4033000/apds990x@39", 0);
 	}
 
 	/*reserve mem for emmd*/
@@ -396,11 +396,18 @@ void ft_board_setup(void *devtree, bd_t *bd)
 	sprintf(cmd, "fdt set /profile marvell,profile-number <%d>\n", mv_profile);
 	run_command(cmd, 0);
 
+	/* pass iddq@1.05v */
+	sprintf(cmd, "fdt set /iddq marvell,iddq-1p05 <%d>\n", iddq_1p05);
+	run_command(cmd, 0);
+
+	/* pass iddq@1.30v */
+	sprintf(cmd, "fdt set /iddq marvell,iddq-1p30 <%d>\n", iddq_1p30);
+	run_command(cmd, 0);
 	/*
 	 * we use 1926 pp table by default, if if sethighperf cmd is set,
 	 * use pxa1928 pp instead.
 	 */
-	if (highperf)
+	if (chip_type != PXA1926_2L_DISCRETE)
 		run_command("fdt set /pp_version version pxa1928", 0);
 
 	if (cpu_is_pxa1928_a0()) {
@@ -409,22 +416,10 @@ void ft_board_setup(void *devtree, bd_t *bd)
 		run_command("fdt set /clock-controller/peri_clock/gc2d_clk lpm-qos <3>", 0);
 		run_command("fdt rm /soc/apb@d4000000/map@c3000000/ marvell,b0_fix", 0);
 		run_command("fdt set /soc/apb@d4000000/thermal@d403b000 marvell,version-flag <3>", 0);
-		/* overwrite emmc rx/tx setting for A0 */
-		run_command("fdt set /soc/axi@d4200000/sdh@d4217000 marvell,sdh-dtr-data"
-			"<2 52000000 104000000 0 0 0 0 1 7 52000000 104000000 0 150 3 1 1>", 0);
-
-		/*reset TWSI3 PIN for dts*/
-		if (pxa1928_discrete == 1) {
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_twsi3_gpio_pins "
-				"pinctrl-single,pins <0x00000290 0x00000004 0x00000294 0x00000004>", 0);
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_isp_twsi3_pins "
-				"pinctrl-single,pins <0x000002d8 0x00000007 0x000002d4 0x00000007>", 0);
-		} else {
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_twsi3_gpio_pins "
-				"pinctrl-single,pins <0x00000160 0x00000004 0x00000164 0x00000004>", 0);
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_isp_twsi3_pins "
-				"pinctrl-single,pins <0x00000194 0x00000007 0x00000198 0x00000007>", 0);
-		}
+		/*Set ISP lpm-qos to PM_QOS_CPUIDLE_BLOCK_AXI
+		* Because A0 chips doesn't support D0CG mode
+		*/
+		run_command("fdt set /soc/axi@f0400000/b52isp@0xF0B00000 lpm-qos <0x00000003>", 0);
 
 		/* overwrite emmc rx/tx setting for A0 */
 		run_command("fdt set /soc/axi@d4200000/sdh@d4217000 marvell,sdh-dtr-data "
@@ -449,24 +444,49 @@ void ft_board_setup(void *devtree, bd_t *bd)
 		/* disable sdio sdr104 mode */
 		run_command("fdt set /soc/axi@d4200000/sdh@d4280800 marvell,sdh-host-caps-disable <0x40000>", 0);
 	} else {
+		run_command("fdt mknode / chip_type", 0);
+		switch (chip_type) {
+			case PXA1926_2L_DISCRETE:
+				run_command("fdt set /chip_type type <0>", 0);
+				break;
+			case PXA1928_POP:
+				run_command("fdt set /chip_type type <1>", 0);
+				break;
+			case PXA1928_4L:
+				run_command("fdt set /chip_type type <2>", 0);
+				break;
+			default:
+				run_command("fdt set /chip_type type <0>", 0);
+				break;
+		}
+
 		/* update dtb so as not to enable ICU for B0 stepping */
 		run_command("fdt set /pxa1928_apmu_ver version bx", 0);
 		run_command("fdt rm /soc/axi/wakeupgen@d4284000", 0);
-
-		if (pxa1928_discrete == 1)
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_twsi3_gpio_pins "
-				"pinctrl-single,pins <0x00000290 0x00000006 0x00000294 0x00000006>", 0);
-		else
-			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_twsi3_gpio_pins "
-				"pinctrl-single,pins <0x00000160 0x00000006 0x00000164 0x00000006>", 0);
+		/* set patch flag of uart break for B0 stepping */
+		run_command("fdt set /soc/apb@d4000000/uart@d4018000 break-abnormal <1>", 0);
+		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/pm828x@10", 0);
 	}
 
 	if ((board_rev == 1) || (board_rev == 2)) {
+		run_command("fdt rm /soc/apb@d4000000/i2c@d4033000/apds9930@39", 0);
 		/*update plat_cam revision to distinguish which board*/
 		run_command("fdt set /plat_cam revision <1>", 0);
-		/* overwrite sd card detect pinmux (0xb8/0x7 -> 0x38/0x0) */
-		run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_sdh1_pins_pullup pinctrl-single,pins"
-			"<0x20 0x0 0x24 0x0 0x28 0x0 0x2c 0x0 0x30 0x0 0x38 0x0 0x3c 0x0>", 0);
+		run_command("fdt set /soc/mcam@1 avdd_2v8-supply <0x00000003>", 0);
+		if (!pxa1928_discrete) {
+			/* overwrite sd card detect pinmux (0xb8/0x7 -> 0x38/0x0) */
+			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/pinmux_sdh1_pins_pullup pinctrl-single,pins"
+					" <0x20 0x0 0x24 0x0 0x28 0x0 0x2c 0x0 0x30 0x0 0x38 0x0 0x3c 0x0>", 0);
+			run_command("fdt set /soc/apb@d4000000/pinmux@d401e000/mfp_pins_left_mmc1_2 pinctrl-single,pins"
+					" <0xb8 0x0>", 0);
+			/* keep sd card vqmmc always on */
+			run_command("fdt set /soc/axi@d4200000/sdh@d4280000 marvell,sdh-quirks2 <0x37400>", 0);
+		}
+		/*overwrite gps ldo for concord version 1, version2,pop and discrete boards*/
+		if ((board_rev == 1) && (pxa1928_discrete == 0))
+			run_command("fdt set /mmp-gps vgps-supply <&buck2>", 0);
+		else
+			run_command("fdt set /mmp-gps vgps-supply <&ldo18>", 0);
 	}
 
 }
@@ -491,11 +511,15 @@ void show_dro(void)
 	nlvt = (val0 & 0x3FF800) >> 11;
 	nsvt = ((val1 & 0x1) << 10) | ((val0 & 0xFFC00000) >> 22);
 	svt = (val1 & 0xFFE) >> 1;
+	iddq_1p05 = (val1 >>  12) & 0x3ff;
+	iddq_1p30 = (val1 >>  22) & 0x3ff;
 	printf("----show dro----\n");
 	printf("LVT NUMBER: %d\n", lvt);
 	printf("NLVT NUMBER: %d\n", nlvt);
 	printf("NSVT NUMBER: %d\n", nsvt);
 	printf("SVT NUMBER: %d\n", svt);
+	printf("IDDQ @ 1.05v: %u\n", iddq_1p05);
+	printf("IDDQ @ 1.30v: %u\n", iddq_1p30);
 	printf("----------------\n");
 
 	for (i = 1; i < 15; i++) {
