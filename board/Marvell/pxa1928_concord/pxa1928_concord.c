@@ -469,6 +469,7 @@ void ft_board_setup(void *devtree, bd_t *bd)
 		run_command("fdt set /soc/axi@d4200000/sdh@d4280000 marvell,sdh-host-caps-disable <0x40000>", 0);
 		/* disable sdio sdr104 mode */
 		run_command("fdt set /soc/axi@d4200000/sdh@d4280800 marvell,sdh-host-caps-disable <0x40000>", 0);
+		run_command("fdt rm /r63311 bl_gpio", 0);
 	} else {
 		run_command("fdt mknode / chip_type", 0);
 		switch (chip_type) {
@@ -492,6 +493,7 @@ void ft_board_setup(void *devtree, bd_t *bd)
 		/* set patch flag of uart break for B0 stepping */
 		run_command("fdt set /soc/apb@d4000000/uart@d4018000 break-abnormal <1>", 0);
 		run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/pm828x@10", 0);
+		run_command("fdt rm /pwm-bl", 0);
 	}
 
 	if ((board_rev == 1) || (board_rev == 2)) {
