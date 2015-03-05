@@ -376,6 +376,25 @@ int recovery_key_detect(void)
 #endif
 
 #if defined(CONFIG_OF_BOARD_SETUP)
+static uchar touch_detect(void)
+{
+	uchar data;
+	int ret;
+	uchar slave_addr[] = {0x22, 0x20, 0x5d, 0xff};
+	int index = 0;
+
+	i2c_set_bus_num(4);
+	while (slave_addr[index] != 0xff) {
+		ret = i2c_read(slave_addr[index], 0x0, 1, &data, 1);
+		if (!ret)
+			return slave_addr[index];
+		index++;
+	}
+	printf("No touch panel\n");
+
+	return 0xff;
+}
+
 void ft_board_setup(void *devtree, bd_t *bd)
 {
 	char cmd[128];
@@ -383,6 +402,13 @@ void ft_board_setup(void *devtree, bd_t *bd)
 	/* set dtb addr */
 	sprintf(cmd, "fdt addr 0x%p", devtree);
 	run_command(cmd, 0);
+
+	uchar touch_slave = touch_detect();
+	run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/gt913@5d", 0);
+	run_command("fdt rm /soc/apb@d4000000/i2c@d4033800/s3202@720p", 0);
+	sprintf(cmd, "fdt set /soc/apb@d4000000/i2c@d4033800/s3202@1080p reg <%d>\n", touch_slave);
+	run_command(cmd, 0);
+	run_command("fdt set /soc/axi/disp/path1/pn_sclk_clksrc clksrc pll3", 0);
 
 	if (3 == board_rev || 4 == board_rev) {
 		run_command("fdt set /soc/apb@d4000000/i2c@d4031000/mpu9250@69 negate_x <1>", 0);
