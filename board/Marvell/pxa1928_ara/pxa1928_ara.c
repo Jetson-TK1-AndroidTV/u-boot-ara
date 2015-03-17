@@ -170,8 +170,8 @@ int recovery_key_detect(void)
 }
 #endif
 
-#ifdef CONFIG_OF_LIBFDT
-void handle_dtb(struct fdt_header *devtree)
+#if defined(CONFIG_OF_BOARD_SETUP)
+void ft_board_setup(void *devtree, bd_t *bd)
 {
 	char cmd[128];
 
