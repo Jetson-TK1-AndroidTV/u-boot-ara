@@ -83,10 +83,9 @@ int arch_cpu_init(void)
 	/* Turn on AIB clock */
 	writel(APBC_APBCLK | APBC_FNCLK, &apbc->aib);
 
-	/* Turn on uart1 clock */
+	/* Turn on uart clocks */
 	writel(UARTCLK14745KHZ, &apbc->uart1);
-
-	/* Turn on uart3 clock */
+	writel(UARTCLK14745KHZ, &apbc->uart2);
 	writel(UARTCLK14745KHZ, &apbc->uart3);
 
 	/* Turn on GPIO clock */

@@ -102,10 +102,11 @@
 
 #undef CONFIG_SYS_NS16550_COM1
 #define CONFIG_SYS_NS16550_COM1		PXA1928_UART1_BASE
+#define CONFIG_SYS_NS16550_COM2		PXA1928_UART2_BASE
 #define CONFIG_SYS_NS16550_COM3		PXA1928_UART3_BASE
 
 #undef CONFIG_CONS_INDEX
-#define CONFIG_CONS_INDEX		3	/*Console on UART3 */
+#define CONFIG_CONS_INDEX		2	/*Console on UART3 */
 
 /*
  * Boot setting
@@ -141,9 +142,9 @@
 
 #undef CONFIG_EXTRA_ENV_SETTINGS
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"stdin=eserial0,eserial2\0" \
-	"stdout=eserial0,eserial2\0" \
-	"stderr=eserial0,eserial2\0" \
+	"stdin=eserial1,eserial2\0" \
+	"stdout=eserial1,eserial2\0" \
+	"stderr=eserial1,eserial2\0" \
         "autostart=yes\0" \
         "verify=yes\0" \
         "cdc_connect_timeout=60\0" \

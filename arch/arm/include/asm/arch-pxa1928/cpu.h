@@ -52,7 +52,8 @@ struct pxa1928apbc_registers {
 	u32 timers;	/*0x024*/
 	u8 pad2[0x02C - 0x24 - 4];
 	u32 uart1;	/*0x02C*/
-	u8 pad3[0x034 - 0x2C - 4];
+	u8 pad3[0x030 - 0x2C - 4];
+	u32 uart2;	/*0x030*/
 	u32 uart3;	/*0x034*/
 	u32 gpio;	/*0x038*/
 	u8 pad4[0x044 - 0x38 - 4];
