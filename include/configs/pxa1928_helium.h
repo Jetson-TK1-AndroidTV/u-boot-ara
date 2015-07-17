@@ -129,6 +129,7 @@
 
 #define CONFIG_MMC_BOOT_DEV     "mmc dev 0 0"
 #define CONFIG_OF_LIBFDT
+#define CONFIG_OF_BOARD_SETUP
 
 /*
  * Environment variables configurations
