@@ -116,7 +116,7 @@
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_BOOTARGS \
-	"rw console=ttyS0,115200 panic_debug uart_dma"
+	"rw console=ttyS3,115200 panic_debug uart_dma"
 
 #define CONFIG_BOOTCOMMAND \
 	"while true; do " \
