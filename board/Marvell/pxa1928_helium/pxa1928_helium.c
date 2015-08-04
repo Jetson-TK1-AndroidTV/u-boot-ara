@@ -177,6 +177,13 @@ void ft_board_setup(void *devtree, bd_t *bd)
 	/* update dtb so as not to enable ICU for B0 stepping */
 	run_command("fdt set /pxa1928_apmu_ver version bx", 0);
 	run_command("fdt rm /soc/axi/wakeupgen@d4284000", 0);
+
+	/* setup board for HDMI output -- later this will depend on env var */
+	/* ADV7533 set burst-mode to off w/ sync pulse */
+	run_command("fdt set /soc/axi@d4200000/dsi@d420b800 marvell,burst-mode <0>", 0);
+	/* remove LG4892 panel entry */
+	run_command("fdt rm /lg4892", 0);
+	printf("Using HDMI for DSI output\n");
 }
 #endif
 
