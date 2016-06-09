@@ -4,4 +4,4 @@
 include $(srctree)/board/nvidia/common/common.mk
 
 obj-y	+= as3722_init.o
-obj-y	+= apalis_tk1.o
+obj-y	+= apalis-tk1.o

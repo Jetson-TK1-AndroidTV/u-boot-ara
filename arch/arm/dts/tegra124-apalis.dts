@@ -4,7 +4,7 @@
 
 / {
 	model = "Toradex Apalis TK1";
-	compatible = "toradex,apalis_tk1", "nvidia,tegra124";
+	compatible = "toradex,apalis-tk1", "nvidia,tegra124";
 
 	chosen {
 		stdout-path = &uarta;

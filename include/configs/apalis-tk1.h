@@ -100,7 +100,7 @@
 	"run usbboot; echo; echo usbboot failed; " \
 	"run nfsboot; echo; echo nfsboot failed"
 
-#define DFU_ALT_EMMC_INFO	"apalis_tk1.img raw 0x0 0x500 mmcpart 1; " \
+#define DFU_ALT_EMMC_INFO	"apalis-tk1.img raw 0x0 0x500 mmcpart 1; " \
 				"boot part 0 1 mmcpart 0; " \
 				"rootfs part 0 2 mmcpart 0; " \
 				"uImage fat 0 1 mmcpart 0; " \

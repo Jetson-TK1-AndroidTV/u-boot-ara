@@ -1,13 +1,13 @@
 if TARGET_APALIS_TK1
 
 config SYS_BOARD
-	default "apalis_tk1"
+	default "apalis-tk1"
 
 config SYS_VENDOR
 	default "toradex"
 
 config SYS_CONFIG_NAME
-	default "apalis_tk1"
+	default "apalis-tk1"
 
 config TRDX_CFG_BLOCK
 	default y

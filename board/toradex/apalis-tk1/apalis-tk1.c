@@ -14,7 +14,7 @@
 #include <asm/arch/gpio.h>
 #include <asm/arch/pinmux.h>
 
-#include "pinmux-config-apalis_tk1.h"
+#include "pinmux-config-apalis-tk1.h"
 
 #define LAN_RESET_N GPIO_PS2
 

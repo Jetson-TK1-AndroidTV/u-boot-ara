@@ -26,7 +26,7 @@ endchoice
 config SYS_SOC
 	default "tegra124"
 
-source "board/toradex/apalis_tk1/Kconfig"
+source "board/toradex/apalis-tk1/Kconfig"
 source "board/nvidia/jetson-tk1/Kconfig"
 source "board/nvidia/nyan-big/Kconfig"
 source "board/nvidia/venice2/Kconfig"
